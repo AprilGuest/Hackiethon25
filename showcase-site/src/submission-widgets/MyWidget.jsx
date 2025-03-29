@@ -94,21 +94,27 @@ const MyWidget = () => {
 
   //Tracks the index of habit that is currently being edited (null if none are being edited)
   const [editingHabitIndex, setEditingHabitIndex] = useState(null)
+  const inputtingInitialName = useRef(false)
 
   const addHabit = (newHabitName) => {
-    setHabits([...habits, { name: newHabitName, checked: false }]);
+    inputtingInitialName.current = true
+    
     setEditingHabit(habits.length);
+    setHabits([...habits, { name: newHabitName, checked: false }]);
     localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const editHabitName = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
+    inputtingInitialName.current = false
     newHabits[habitIndex] = { name: newHabitName, checked: habits[habitIndex].checked }
     setHabits(newHabits)
     localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const deleteHabit = (habitIndex) => {
+    inputtingInitialName.current = false
+
     let newHabits = []
     for (let i = 0; i < habits.length; i++) {
       if (i !== habitIndex)
@@ -142,7 +148,7 @@ const MyWidget = () => {
   }
 
   const setEditingHabit = (habitIndex) => {
-    if (editingHabitIndex === habitIndex) {
+    if (editingHabitIndex === habitIndex && !inputtingInitialName.current) {
       setEditingHabitIndex(null)
     }
     else {
@@ -243,6 +249,8 @@ const MyWidget = () => {
     }
   }, [])
 
+  console.log(inputtingInitialName.current)
+
   return (
     <div className="p-6 max-w-4xl w-150 mx-auto h-160 bg-white rounded-xl shadow-lg flex flex-col">
       <div className="flex justify-between items-start">
@@ -260,12 +268,15 @@ const MyWidget = () => {
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
               onDeleteClicked={() => deleteHabit(index)}
-              onEditClicked={() => setEditingHabit(index)}
+              onEditClicked={() => {
+                setEditingHabit(index); 
+                inputtingInitialName.current = false
+              }}
               onCheckClicked={() => checkHabit(index)}
-              onEditName={(newName) => editHabitName(index, newName)} />
+              onEditName={(newName) => editHabitName(index, newName)}
+              initialNaming={inputtingInitialName.current}/>
           ))}
-          {/* Needs styling */}
-          <button className="" onClick={() => addHabit("New habit")}><TiPlus /></button>
+          <button className="mt-1 bg-cyan-500 border-2 border-cyan-400 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
         </div>
         <div className="h-2"></div>
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
@@ -304,7 +315,7 @@ const MyWidget = () => {
   );
 };
 
-const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClicked, onCheckClicked, onEditName }) => {
+const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClicked, onCheckClicked, onEditName, initialNaming }) => {
   const handleNameChange = (e) => {
     e.preventDefault()
 
@@ -326,13 +337,13 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
       {!beingEdited ?
         <p className='overflow-hidden max-w-28'>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
-          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={20} />
+          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-33' maxLength={15} />
           <button type="submit" className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
           <button className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'
-            onClick={onEditClicked}><TiTimes />
+            onClick={initialNaming ? onDeleteClicked : onEditClicked}><TiTimes />
           </button>
         </form>
       }
