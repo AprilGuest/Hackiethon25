@@ -138,7 +138,6 @@ const MyWidget = () => {
       levelUp();
     }
   }
-
   const checkHabit = (habitIndex) => {
     let newHabits = [...habits]
     newHabits[habitIndex].checked = !newHabits[habitIndex].checked
@@ -177,12 +176,12 @@ const MyWidget = () => {
         </div>
       </div>
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <div className="text-xl font-bold text-indigo-600">User Profile</div>
+        <div className="text-xl font-bold text-indigo-600">Level {level}: {levels[level]}</div>
         <div className="border-2 bg-blue-500/75 w-30 h-30 bg-clip-border p-3">Icon Here</div>
         <div class="h-8"></div>
-        <div className="border-2 bg-cyan-500/75 w-60 h-60 bg-clip-border p-3">Level Description</div>
+        <div className="text-xs border-2 bg-cyan-500/75 w-60 h-60 bg-clip-border p-3"> Level Description
+        </div>
       </div>
-
     </div>
   );
 };
