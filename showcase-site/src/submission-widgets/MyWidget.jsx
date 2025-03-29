@@ -3,6 +3,83 @@ import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
 import { TiPencil, TiTrash, TiTick, TiTimes } from "react-icons/ti";
 
+import { GiWingedSword } from "react-icons/gi";
+import { GiAbdominalArmor } from "react-icons/gi";
+import { GiRustySword } from "react-icons/gi";
+import { GiPointySword } from "react-icons/gi";
+import { GiHeartArmor } from "react-icons/gi";
+import { GiEyeShield } from "react-icons/gi";
+import { GiRoundShield } from "react-icons/gi";
+import { GiHeartShield } from "react-icons/gi";
+import { GiSwordBrandish } from "react-icons/gi";
+import { GiBroadsword } from "react-icons/gi";
+import { GiSwordAltar } from "react-icons/gi";
+
+const levels = [
+  "Novice",
+  "Initiate",
+  "Recruit",
+  "Squire",
+  "Adventurer",
+  "Knight",
+  "Warrior",
+  "Protector",
+  "Guardian",
+  "Champion",
+  "Legend",
+]
+
+const LevelIcon = (props) => {
+  const classes = "scale-5000 h-100 z-0"
+  switch (props.level) {
+    case 0:
+    return (<GiRustySword className={classes} />)
+    case 1:
+    return (<GiRoundShield className={classes} />)
+    case 2:
+    return (<GiHeartArmor className={classes} />)
+    case 3:
+    return (<GiPointySword className={classes} />)
+    case 4:
+    return (<GiSwordBrandish className={classes} />) 
+    case 5:
+    return (<GiBroadsword className={classes} />)
+    case 6:
+    return (<GiAbdominalArmor className={classes} />)
+    case 7:
+    return (<GiHeartShield className={classes} />)
+    case 8:
+    return (<GiEyeShield className={classes} />)
+    case 9:
+    return (<GiWingedSword className={classes} />)
+    case 10:
+    return (<GiSwordAltar className={classes} />)
+  }
+}
+
+const hpcolors = {
+  5: "#740000",
+  10: "#e24221",
+  25: "#f7921a",
+  37: "#fbb72a",
+  50: "#ffe13d",
+  70: "#bce444",
+  100: "#66e74e",
+}
+const xpcolors = [
+  "#05003d",
+  "#261ca3",
+  "#4f0b99",
+  "#9d49ff",
+  "#d841ff",
+  "#ff4099",
+  "#ff8b40",
+  "#fff840",
+  "#8cfcb2",
+  "#40fffe",
+  "center / 130px url(https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/158/posts/37453/image-upload/RainbowGradientOverlay13.jpg)",
+]
+
 const MyWidget = () => {
   const [level, setLevel] = useState(0)
   const [hp, setHp] = useState(100)
@@ -39,18 +116,20 @@ const MyWidget = () => {
     if (level < 10) {
       setLevel(level+1);
     } else {
-      setLevel(0);
+      setLevel(0); // Temporary
     }
   }
 
+  // Temporary
   const changeHp = () => {
     if (hp >= 10) {
       setHp(hp - 10);
     } else {
-      setHp(100);
+      setHp(100); 
     }
   }
 
+  // Temporary
   const changeXp = () => {
     if (xp <= 90) {
       setXp(xp + 10);
@@ -78,7 +157,7 @@ const MyWidget = () => {
     return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
+        <h2 className="text-3xl font-bold text-gray-800">Welcome, {userName}!</h2>
         <div className="text-xl font-bold text-blue-600">
           Daily Tasks
         </div>
@@ -102,7 +181,8 @@ const MyWidget = () => {
       <ProgressBar type="xp" level={level} progress={xp} />
       <button className="bg-red-100" onClick={changeHp}>Change hp</button>
       <button className="bg-red-100" onClick={changeXp}>Change xp</button>
-      <p>Level: {level}</p>
+      <p>Level: {levels[level]}</p>
+      < LevelIcon level={level}/>
       <button className="bg-red-100" onClick={levelUp}>Increase level</button>
     </div>
   );
@@ -160,29 +240,6 @@ const Habit = ({habitName, beingEdited, isChecked, onEditClicked, onDeleteClicke
 }
 
 const ProgressBar = (props) => {
-  const hpcolors = {
-    5: "#740000",
-    10: "#e24221",
-    25: "#f7921a",
-    37: "#fbb72a",
-    50: "#ffe13d",
-    70: "#bce444",
-    100: "#66e74e",
-  }
-  const xpcolors = [
-    "#05003d",
-    "#261ca3",
-    "#4f0b99",
-    "#9d49ff",
-    "#d841ff",
-    "#ff4099",
-    "red", // Do some fancy gradients or something
-    "red",
-    "red",
-    "red",
-    "red",
-  ]
-
   const getHpColor = () => {
     if (props.type == 'hp') {
       for (let i in hpcolors) {
