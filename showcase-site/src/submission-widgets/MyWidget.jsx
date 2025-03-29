@@ -172,7 +172,6 @@ const MyWidget = () => {
         <div class="h-2"></div>
         <div className="bg-white rounded-xl shadow-md h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600">Current Status</div>
-
           <ProgressBar type="hp" />
           <ProgressBar type="xp" />
         </div>
