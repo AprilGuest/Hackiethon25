@@ -94,7 +94,10 @@ const MyWidget = () => {
   //Tracks the index of habit that is currently being edited (null if none are being edited)
   const [editingHabitIndex, setEditingHabitIndex] = useState(null)
 
-  const addHabit = (newHabitName) => setHabits([...habits, { name: newHabitName, checked: false }])
+  const addHabit = (newHabitName) => {
+    setHabits([...habits, { name: newHabitName, checked: false }]);
+    setEditingHabit(habits.length);
+  }
 
   const editHabitName = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
