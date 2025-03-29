@@ -159,7 +159,7 @@ const MyWidget = () => {
         <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
         <div className="text-xl font-bold text-blue-600">Daily Tasks
         </div>
-        <div className="border-4 bg-green-500 h-100 bg-clip-border p-3">Habits List
+        <div className="border-2 bg-green-500/75 h-100 bg-clip-border p-3">Habits List
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -179,9 +179,9 @@ const MyWidget = () => {
       </div>
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600">User Profile</div>
-        <div className="border-4 bg-blue-500 w-30 h-30 bg-clip-border p-3">Icon Here</div>
+        <div className="border-2 bg-blue-500/75 w-30 h-30 bg-clip-border p-3">Icon Here</div>
         <div class="h-8"></div>
-        <div className="border-4 bg-cyan-500 w-60 h-60 bg-clip-border p-3">Level Description</div>
+        <div className="border-2 bg-cyan-500/75 w-60 h-60 bg-clip-border p-3">Level Description</div>
       </div>
 
     </div>
