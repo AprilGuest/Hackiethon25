@@ -166,11 +166,11 @@ const MyWidget = () => {
   }
   return (
     <div className="p-6 max-w-4xl w-150 mx-auto h-140 bg-white rounded-xl shadow-lg flex justify-between items-start">
-      <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col">
+      <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col mr-4">
         <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
         <div className="text-xl font-bold text-blue-600">Daily Tasks
         </div>
-        <div className="border-2 bg-green-500/75 h-100 bg-clip-border p-3">Habits List
+        <div className="bg-green-500/75 h-100 bg-clip-border p-3 rounded-xl">
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -181,7 +181,7 @@ const MyWidget = () => {
           ))}
         </div>
         <div class="h-2"></div>
-        <div className="bg-white rounded-xl shadow-md h-40 flex flex-col justify-end">
+        <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
             <ProgressBar type="xp" level={level} progress={(xp/xpToLevel.current) * 100} />
@@ -194,11 +194,10 @@ const MyWidget = () => {
       <p>Level: {levels[level]}</p>
       < LevelIcon level={level}/>*/}
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <div className="text-xl font-bold text-indigo-600">User Profile</div>
+        <div className="text-xl font-bold text-indigo-600 text-center">{levelInfo[level].name}</div>
         <div className="w-40 h-40 m-5">
         <LevelIcon level={level}/></div>
-        <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">
-          <div className="font-bold text-indigo-600 text-l text-center">{levelInfo[level].name}</div>
+        <div className="bg-cyan-500 w-full h-40 bg-clip-border p-3 rounded-xl">
           <div className="text-xs text-center">{levelInfo[level].description}</div>
         </div>
       </div>
