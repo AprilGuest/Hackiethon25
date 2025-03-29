@@ -235,8 +235,8 @@ const MyWidget = () => {
     if (storedDateData === null)
       localStorage.setItem("date", new Date().getDate())
     else {
-      let storedDate = new Date(storedDateData)
-      if (storedDate.getDate() !== new Date().getDate()) {
+      console.log(`Stored date: ${storedDateData}, current date: ${new Date().getDate()}`)
+      if (storedDateData != new Date().getDate()) {
         let currentDate = new Date().getDate()
         localStorage.setItem("date", currentDate)
         updateHabitsUponDateChange()
@@ -379,5 +379,4 @@ const ProgressBar = (props) => {
 export default MyWidget;
 
 // Still to do:
-// FIx hp drop on reload bug (on page reload, you lose 10xp per unchecked habit as it thinks it's a new day.)
-// Save habits list and status on reload
+// BUG: free hp by completing habits up to 100hp then undoing them (to lose xp instead)
