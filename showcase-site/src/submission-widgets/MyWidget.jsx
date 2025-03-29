@@ -272,7 +272,10 @@ const MyWidget = () => {
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600 text-center">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
-            <ProgressBar type="xp" level={level} progress={((xp-levelInfo[level].minxp)/(levelInfo[level+1].minxp-levelInfo[level].minxp)) * 100} />
+            <ProgressBar type="xp" level={level} 
+            progress={((xp-levelInfo[level].minxp)/(levelInfo[level+1].minxp-levelInfo[level].minxp)) * 100} 
+            currentXp={xp}
+            xpToLevel={levelInfo[Math.min(level + 1, maxLevel)].minxp}/>
         </div>
       </div>
       {/* Debug Buttons 
@@ -367,7 +370,7 @@ const ProgressBar = (props) => {
   return (
     <div className="block w-full">
       {props.type == "hp" ? <TiHeartFullOutline className='inline mr-2' /> : <TiStarFullOutline className='inline mr-2'/>}
-      <p className="text-xs inline">{props.type == "hp" ? `Remaining HP: ${props.progress}` : `Level ${props.level}`}</p>
+      <p className="text-xs inline">{props.type == "hp" ? `Remaining HP: ${props.progress}` : `Level ${props.level} - ${props.currentXp}/${props.xpToLevel} XP`}</p>
       <div className="bg-gray-200 rounded-full h-4 w-100%">
         <div
           className="rounded-full h-full transition-all duration-500"
