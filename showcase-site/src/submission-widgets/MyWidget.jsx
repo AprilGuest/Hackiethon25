@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
+import { TiHeartFullOutline } from "react-icons/ti";
+import { TiStarFullOutline } from "react-icons/ti";
 import { TiPencil, TiTrash } from "react-icons/ti";
 
 const MyWidget = () => {
+  const [level, setLevel] = useState(0)
+  const [hp, setHp] = useState(100)
+  const [xp, setXp] = useState(0)
+
   const [userName, setUserName] = useState("Name")
   const [habits, setHabits] = useState([{name: "Test Habit", checked:false}])
 
@@ -27,6 +33,31 @@ const MyWidget = () => {
     setHabits(newHabits)
   }
 
+  const levelUp = () => {
+    if (level < 10) {
+      setLevel(level+1);
+    } else {
+      setLevel(0);
+    }
+  }
+
+  const changeHp = () => {
+    if (hp >= 10) {
+      setHp(hp - 10);
+    } else {
+      setHp(100);
+    }
+  }
+
+  const changeXp = () => {
+    if (xp <= 90) {
+      setXp(xp + 10);
+    } else {
+      setXp(0);
+      levelUp();
+    }
+  }
+
   const checkHabit = (habitIndex) => {
     let newHabits = [...habits]
     newHabits[habitIndex].checked = !newHabits[habitIndex].checked
@@ -48,13 +79,12 @@ const MyWidget = () => {
           <div className="border-4 bg-cyan-500 w-40 h-10 bg-clip-border p-3">XP Bar</div>
         </div>
       </div>
-      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <div className="text-xl font-bold text-indigo-600">User Profile</div>
-        <div className="border-4 bg-blue-500 w-40 h-40 bg-clip-border p-3">Emoji Here</div>
-        <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">Level Description</div>
-      </div>
-      <ProgressBar type="hp" />
-      <ProgressBar type="xp" />
+      <ProgressBar type="hp" level={level} progress={hp} />
+      <ProgressBar type="xp" level={level} progress={xp} />
+      <button className="bg-red-100" onClick={changeHp}>Change hp</button>
+      <button className="bg-red-100" onClick={changeXp}>Change xp</button>
+      <p>Level: {level}</p>
+      <button className="bg-red-100" onClick={levelUp}>Increase level</button>
     </div>
   );
 };
@@ -83,53 +113,63 @@ const Habit = ({habitName, beingEdited, checked, onEditClicked, onDeleteClicked,
 }
 
 const ProgressBar = (props) => {
-  // const colors = {
-  //   5: "darkred",
-  //   10: "firebrick",
-  //   20: "darkorange",
-  //   40: "orange",
-  //   60: "gold",
-  //   80: "olivedrab",
-  //   100: "limegreen",
-  // }
-  const [progress, setProgress] = useState(0);
-  const [color, setColor] = useState("limegreen");
+  const hpcolors = {
+    5: "#740000",
+    10: "#e24221",
+    25: "#f7921a",
+    37: "#fbb72a",
+    50: "#ffe13d",
+    70: "#bce444",
+    100: "#66e74e",
+  }
+  const xpcolors = [
+    "#05003d",
+    "#261ca3",
+    "#4f0b99",
+    "#9d49ff",
+    "#d841ff",
+    "#ff4099",
+    "red", // Do some fancy gradients or something
+    "red",
+    "red",
+    "red",
+    "red",
+  ]
 
-  const addProgress = () => {
-    if (progress >= 90) {
-      setProgress(100);
-    } else {
-      setProgress(progress+10);
+  const getHpColor = () => {
+    if (props.type == 'hp') {
+      for (let i in hpcolors) {
+        if (props.progress <= i) {
+          return hpcolors[i];
+        }
+      }
     }
   }
-  const resetProgress = () => setProgress(0);
 
-
-  // if (props.type == 'hp') {
-  //   for (i in colors.keys) {
-  //     if (progress <= i) {
-  //       setColor(colors[i]);
-  //       alert(`Set color to ${color}.`)
-  //       break
-  //     }
+  // const updateProgress = () => {
+  //   // Modify if needed
+  //   if (progress == 100) {
+  //     setProgress(0);
+  //   } else if (progress >= 90) {
+  //     setProgress(100);
+  //   } else {
+  //     setProgress(progress+10);
   //   }
   // }
 
   return (
-    <div>
-      <div className="size-100% bg-gray-200 rounded-full h-4 block mt-4 mb-4"> 
+    <div className="block mt-4 mb-4 w-full">
+      {props.type == "hp" ? <TiHeartFullOutline /> : <TiStarFullOutline />}
+      <div className="bg-gray-200 rounded-full h-4 w-100%"> 
         <div 
           className="rounded-full h-full transition-all duration-500"
           style={{
-                  width: `${progress}%`,
-                  background: color,
+                  width: `${props.progress}%`,
+                  background: (props.type == "xp" ? xpcolors[props.level] : getHpColor()),
                 }}
         ></div>
       </div>
-      {/* Remove later */}
-      <button className="bg-red-100" onClick={addProgress}>Increase</button>
-      <button className="bg-red-100" onClick={resetProgress}>Reset</button>
-      </div>
+    </div>
   )
 }
 
