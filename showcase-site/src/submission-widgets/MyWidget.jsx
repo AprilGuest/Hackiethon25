@@ -91,8 +91,12 @@ const MyWidget = () => {
   { name: "Habit 2", checked: false }
   ])
 
+  const [displayDate, setDisplayDate] = useState(new Date())
+
   //Tracks the index of habit that is currently being edited (null if none are being edited)
   const [editingHabitIndex, setEditingHabitIndex] = useState(null)
+
+  //Habit handler functions
 
   const addHabit = (newHabitName) => setHabits([...habits, { name: newHabitName, checked: false }])
 
@@ -109,9 +113,32 @@ const MyWidget = () => {
         newHabits.push(habits[i])
     }
 
+    setHabits(newHabits)
+  }
+
+  const checkHabit = (habitIndex) => {
+    let newHabits = [...habits]
+    let isChecked = !newHabits[habitIndex].checked
+    newHabits[habitIndex].checked = isChecked ? true : null
+    
+    if(isChecked)
+      changeXp(10)
+    else
+      changeXp(-10)
 
     setHabits(newHabits)
   }
+
+  const setEditingHabit = (habitIndex) => {
+    if (editingHabitIndex === habitIndex) {
+      setEditingHabitIndex(null)
+    }
+    else {
+      setEditingHabitIndex(habitIndex)
+    }
+  }
+
+  // Level up, XP and HP handlers
 
   const levelUpOrDown = (levelUp) => {
     let newLevel = level
@@ -143,34 +170,31 @@ const MyWidget = () => {
     setXp(newXp);
   }
 
-  const checkHabit = (habitIndex) => {
-    let newHabits = [...habits]
-    let isChecked = !newHabits[habitIndex].checked
-    newHabits[habitIndex].checked = isChecked ? true : null
-    
-    if(isChecked)
-      changeXp(10)
-    else
-      changeXp(-10)
+  //Date handling
 
+  const updateDate = (dayIncrement) => {
+    let newDate = new Date(displayDate)
+    newDate.setDate(newDate.getUTCDate() + dayIncrement)
+
+    let newHabits = [...habits]
+
+    for(let habit of newHabits)
+      habit.checked = false
+
+    setDisplayDate(newDate)
+
+    console.log(newHabits)
     setHabits(newHabits)
   }
 
-  const setEditingHabit = (habitIndex) => {
-    if (editingHabitIndex === habitIndex) {
-      setEditingHabitIndex(null)
-    }
-    else {
-      setEditingHabitIndex(habitIndex)
-    }
-  }
   return (
-    <div className="p-6 max-w-4xl w-150 mx-auto h-140 bg-white rounded-xl shadow-lg flex justify-between items-start">
+    <div className="p-6 max-w-4xl w-150 mx-auto h-150 bg-white rounded-xl shadow-lg flex flex-col">
+      <div className="flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col mr-4">
         <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
         <div className="text-xl font-bold text-indigo-600 text-center">Daily Tasks
         </div>
-        <div className="bg-cyan-500 h-100 bg-clip-border p-3 rounded-xl">
+        <div className="bg-cyan-500 h-100 max-h-100 bg-clip-border p-3 rounded-xl">
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -182,7 +206,7 @@ const MyWidget = () => {
           {/* Needs styling */}
           <button className="" onClick={() => addHabit("New habit")}><TiPlus /></button>
         </div>
-        <div class="h-2"></div>
+        <div className="h-2"></div>
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600 text-center">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
@@ -204,6 +228,11 @@ const MyWidget = () => {
           <div className="text-xs text-center">{levelInfo[level].description}</div>
         </div>
       </div>
+      </div>
+      <div className='flex items-center justify-center gap-2 p-2 mt-2 border-t-2 border-gray-300'>
+          <p>Current Date: {displayDate.toISOString().slice(0, 10)}</p>
+          <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' onClick={() => updateDate(1)}>+1 Day</button>
+      </div>
     </div>
   );
 };
@@ -224,7 +253,7 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
       <input type="checkbox"
         className='border-gray-400 hover:scale-140 hover:border-black transition-all'
         onClick={onCheckClicked}
-        defaultChecked={isChecked} />
+        checked={isChecked} />
 
 
       {/* Name/edit box */}
@@ -232,10 +261,10 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
         <p>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
           <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={30} />
-          <button type="submit" className='border-cyan-700 border-1 rounded-md scale-100 box-border
+          <button type="submit" className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
-          <button className='border-cyan-700 border-1 rounded-md scale-100 box-border
+          <button className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'
             onClick={onEditClicked}><TiTimes />
           </button>
@@ -246,15 +275,16 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
 
       {!beingEdited &&
         <div className='ml-auto flex gap-2 justify-end'>
-          <button className='border-cyan-700 border-1 rounded-md ml-auto box-border transition-all
+          <button className='border-cyan-500 border-1 rounded-md ml-auto box-border transition-all
                       hover:border-black hover:scale-125'
             onClick={onEditClicked}><TiPencil />
           </button>
-          <button className='border-cyan-700 border-1 rounded-md scale-100 box-border
+          <button className='border-cyan-500 border-1 rounded-md scale-100 box-border
                           transition-all hover:border-black hover:scale-125'
             onClick={onDeleteClicked}><TiTrash />
           </button>
-        </div>}
+        </div>
+        }
     </div>
   )
 }
