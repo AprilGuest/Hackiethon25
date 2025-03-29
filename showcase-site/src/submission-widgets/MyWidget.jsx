@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
 import { TiPencil, TiTrash, TiTick, TiTimes, TiPlus } from "react-icons/ti";
@@ -84,6 +84,7 @@ const MyWidget = () => {
   const [level, setLevel] = useState(0)
   const [hp, setHp] = useState(100)
   const [xp, setXp] = useState(0)
+  const lastUpdatedXP = useRef(true)
   const maxLevel = 10
 
   const [userName, setUserName] = useState("Name")
@@ -121,10 +122,17 @@ const MyWidget = () => {
     let isChecked = !newHabits[habitIndex].checked
     newHabits[habitIndex].checked = isChecked ? true : null
     
-    if(isChecked)
-      changeXp(10)
-    else
-      changeXp(-10)
+    if(hp === 100) {
+      if(isChecked)
+        changeXp(10)
+      else
+        changeXp(-10)
+    } else {
+      if(isChecked)
+        changeHp(10)
+      else
+        changeHp(-10)
+    }
 
     setHabits(newHabits)
   }
@@ -170,25 +178,64 @@ const MyWidget = () => {
     setXp(newXp);
   }
 
-  //Date handling
+  const changeHp = (hpChange) => {
+    let newHp = hp + hpChange
+    if (newHp > 100)
+      newHp = 100
+    else if(newHp < 0) {
+      levelUpOrDown(false)
+      newHp = 100
+    }
 
-  const updateDate = (dayIncrement) => {
+    setHp(newHp)
+  }
+
+  //Date & local storage handling
+
+  const increaseDate = () => {
     let newDate = new Date(displayDate)
-    newDate.setDate(newDate.getUTCDate() + dayIncrement)
+    newDate.setDate(newDate.getDate() + 1)
 
-    let newHabits = [...habits]
-
-    for(let habit of newHabits)
-      habit.checked = false
+    updateHabitsUponDateChange()
 
     setDisplayDate(newDate)
+  }
 
-    console.log(newHabits)
+  const updateHabitsUponDateChange = () => {
+    let newHabits = [...habits]
+
+    let decreaseHP = false
+
+    //We want to decrease HP if the user hasn't completed all habits in a day
+    for(let habit of newHabits) {
+      if(!habit.checked)
+        decreaseHP = true 
+      else
+        habit.checked = false
+    }
+
+    if(decreaseHP)
+      changeHp(-10)
+
     setHabits(newHabits)
   }
 
+  useEffect(() => {
+    let storedDateData = localStorage.getItem("date")
+    if (storedDateData === null)
+      localStorage.setItem("date", new Date().getDate())
+    else {
+      let storedDate = new Date(storedDateData)
+      if (storedDate.getDate() !== new Date().getDate()) {
+        let currentDate = new Date().getDate()
+        localStorage.setItem("date", currentDate)
+        updateHabitsUponDateChange()
+      }
+    }
+  }, [])
+
   return (
-    <div className="p-6 max-w-4xl w-150 mx-auto h-150 bg-white rounded-xl shadow-lg flex flex-col">
+    <div className="p-6 max-w-4xl w-150 mx-auto h-160 bg-white rounded-xl shadow-lg flex flex-col">
       <div className="flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col mr-4">
         <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
@@ -229,9 +276,13 @@ const MyWidget = () => {
         </div>
       </div>
       </div>
+      <div className="flex flex-col gap-1 justify-center">
       <div className='flex items-center justify-center gap-2 p-2 mt-2 border-t-2 border-gray-300'>
           <p>Current Date: {displayDate.toISOString().slice(0, 10)}</p>
-          <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' onClick={() => updateDate(1)}>+1 Day</button>
+          <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' 
+          onClick={() => increaseDate()}>+1 Day</button>
+      </div>
+      <p className="text-gray-400 text-sm italic">(This is here to showcase functionality and wouldn't appear in real use-cases)</p>
       </div>
     </div>
   );
@@ -252,9 +303,8 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
     <div className="flex gap-5">
       <input type="checkbox"
         className='border-gray-400 hover:scale-140 hover:border-black transition-all'
-        onClick={onCheckClicked}
+        onChange={onCheckClicked}
         checked={isChecked} />
-
 
       {/* Name/edit box */}
       {!beingEdited ?
