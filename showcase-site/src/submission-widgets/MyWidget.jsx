@@ -34,18 +34,20 @@ const MyWidget = () => {
     if (level < 10) {
       setLevel(level+1);
     } else {
-      setLevel(0);
+      setLevel(0); // Temporary
     }
   }
 
+  // Temporary
   const changeHp = () => {
     if (hp >= 10) {
       setHp(hp - 10);
     } else {
-      setHp(100);
+      setHp(100); 
     }
   }
 
+  // Temporary
   const changeXp = () => {
     if (xp <= 90) {
       setXp(xp + 10);
@@ -98,7 +100,7 @@ const ProgressBar = (props) => {
     "#9d49ff",
     "#d841ff",
     "#ff4099",
-    "red", // Do some fancy gradients or something
+    "linear-gradient(0.25turn, magenta, red, orange, yellow, green, aqua, blue, purple)", // Do some fancy gradients or something
     "red",
     "red",
     "red",
