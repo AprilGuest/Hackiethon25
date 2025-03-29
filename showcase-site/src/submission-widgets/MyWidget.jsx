@@ -212,7 +212,7 @@ const MyWidget = () => {
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600 text-center">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
-            <ProgressBar type="xp" level={level} progress={((xp-levelInfo[level].minxp)/(levelInfo[level+1].minxp-levelInfo[level].minxp)) * 100} />
+            <ProgressBar type="xp" level={level} progress={(xp > levelInfo[11].minxp) ? 100 : ((xp-levelInfo[level].minxp)/(levelInfo[level+1].minxp-levelInfo[level].minxp)) * 100} />
         </div>
       </div>
       {/* Debug Buttons 
