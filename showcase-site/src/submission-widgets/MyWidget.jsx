@@ -85,10 +85,12 @@ const MyWidget = () => {
   const [level, setLevel] = useState(Number(localStorage.getItem("level")) || 0)
   const [hp, setHp] = useState(Number(localStorage.getItem('hp')) || 100)
   const [xp, setXp] = useState(Number(localStorage.getItem("xp")) || 0)
-  const lastUpdatedXP = useRef(true)
   const maxLevel = 10
 
-  const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [{ name: "Test Habit", checked: false },])
+  const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [])
+  const habitsIncreasedXP = useRef(habits.map((habit) => null))
+
+  console.log(habitsIncreasedXP)
 
   const [displayDate, setDisplayDate] = useState(new Date())
 
@@ -101,6 +103,7 @@ const MyWidget = () => {
     
     setEditingHabit(habits.length);
     setHabits([...habits, { name: newHabitName, checked: false }]);
+    habitsIncreasedXP.current = ([...habitsIncreasedXP.current, null])
     localStorage.setItem("habits", JSON.stringify(habits))
   }
 
@@ -116,13 +119,17 @@ const MyWidget = () => {
     inputtingInitialName.current = false
 
     let newHabits = []
+    let newHabitsIncreasedXP = []
     for (let i = 0; i < habits.length; i++) {
-      if (i !== habitIndex)
+      if (i !== habitIndex) {
         newHabits.push(habits[i])
+        newHabitsIncreasedXP.push(habitsIncreasedXP.current[i])
+      }
     }
 
+    habitsIncreasedXP.current = newHabitsIncreasedXP
     setHabits(newHabits)
-    localStorage.setItem("habits", JSON.stringify(habits))
+    localStorage.setItem("habits", JSON.stringify(newHabits))
   }
 
   const checkHabit = (habitIndex) => {
@@ -130,12 +137,16 @@ const MyWidget = () => {
     let isChecked = !newHabits[habitIndex].checked
     newHabits[habitIndex].checked = isChecked ? true : null
     
-    if(hp === 100) {
+    if(hp === 100 && habitsIncreasedXP.current[habitIndex] !== false) {
+      habitsIncreasedXP.current[habitIndex] = true
+
       if(isChecked)
         changeXp(10)
       else
         changeXp(-10)
     } else {
+      habitsIncreasedXP.current[habitIndex] = false
+
       if(isChecked)
         changeHp(10)
       else
@@ -218,18 +229,24 @@ const MyWidget = () => {
     let newHabits = [...habits]
 
     let decreaseHP = false
+    let habitsIncreasedXp = habits.map((habit) => true)
 
     //We want to decrease HP if the user hasn't completed all habits in a day
+    let index = 0
     for(let habit of newHabits) {
-      if(!habit.checked)
+      if(!habit.checked) {
         decreaseHP = true 
+      }
       else
         habit.checked = false
+
+      index++
     }
 
     if(decreaseHP)
       changeHp(-10)
 
+    habitsIncreasedXP.current = habitsIncreasedXp
     setHabits(newHabits)
 
     localStorage.setItem("habits", JSON.stringify(habits))
@@ -240,7 +257,6 @@ const MyWidget = () => {
     if (storedDateData === null)
       localStorage.setItem("date", new Date().getDate())
     else {
-      console.log(`Stored date: ${storedDateData}, current date: ${new Date().getDate()}`)
       if (storedDateData != new Date().getDate()) {
         let currentDate = new Date().getDate()
         localStorage.setItem("date", currentDate)
@@ -248,8 +264,6 @@ const MyWidget = () => {
       }
     }
   }, [])
-
-  console.log(inputtingInitialName.current)
 
   return (
     <div className="p-6 max-w-4xl w-150 mx-auto h-160 bg-white rounded-xl shadow-lg flex flex-col">
@@ -276,7 +290,10 @@ const MyWidget = () => {
               onEditName={(newName) => editHabitName(index, newName)}
               initialNaming={inputtingInitialName.current}/>
           ))}
-          <button className="mt-1 bg-cyan-500 border-2 border-cyan-400 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
+          <div className="flex justify-start gap-2 items-center">
+            <button className="mt-1 bg-cyan-500 border-2 border-cyan-400 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
+            {habits.length === 0 && <p className="italic text-xs text-gray-800">Click to add a new habit!</p>}
+          </div>
         </div>
         <div className="h-2"></div>
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
@@ -329,9 +346,10 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
   return (
     <div className="flex gap-5">
       <input type="checkbox"
-        className='border-gray-400 hover:scale-140 hover:border-black transition-all'
-        onChange={onCheckClicked}
-        checked={isChecked} />
+        className={`border-gray-400 hover:scale-140 hover:border-black transition-all ${(beingEdited && initialNaming) && "opacity-0"}`}
+        onChange={!(beingEdited && initialNaming) ? onCheckClicked : (() => {})}
+        checked={isChecked}
+      />
 
       {/* Name/edit box */}
       {!beingEdited ?
