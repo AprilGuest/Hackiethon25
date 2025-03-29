@@ -127,7 +127,6 @@ const MyWidget = () => {
       setHp(100); 
       levelUpOrDown(false)
     }
-  }
 
   const changeXp = (xpChange) => {
     let newXp = xp + xpChange
