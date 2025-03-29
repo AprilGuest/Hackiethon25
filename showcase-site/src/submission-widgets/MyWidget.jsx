@@ -82,16 +82,14 @@ const xpcolors = [
 ]
 
 const MyWidget = () => {
-  const [level, setLevel] = useState(0)
-  const [hp, setHp] = useState(100)
-  const [xp, setXp] = useState(0)
+  const [level, setLevel] = useState(Number(localStorage.getItem("level")) || 0)
+  const [hp, setHp] = useState(Number(localStorage.getItem('hp')) || 100)
+  const [xp, setXp] = useState(Number(localStorage.getItem("xp")) || 0)
   const lastUpdatedXP = useRef(true)
   const maxLevel = 10
 
   const [userName, setUserName] = useState("Name")
-  const [habits, setHabits] = useState([{ name: "Test Habit", checked: false },
-  { name: "Habit 2", checked: false }
-  ])
+  const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [{ name: "Test Habit", checked: false },])
 
   const [displayDate, setDisplayDate] = useState(new Date())
 
@@ -101,12 +99,14 @@ const MyWidget = () => {
   const addHabit = (newHabitName) => {
     setHabits([...habits, { name: newHabitName, checked: false }]);
     setEditingHabit(habits.length);
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const editHabitName = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
     newHabits[habitIndex] = { name: newHabitName, checked: habits[habitIndex].checked }
     setHabits(newHabits)
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const deleteHabit = (habitIndex) => {
@@ -117,6 +117,7 @@ const MyWidget = () => {
     }
 
     setHabits(newHabits)
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const checkHabit = (habitIndex) => {
@@ -137,6 +138,8 @@ const MyWidget = () => {
     }
 
     setHabits(newHabits)
+
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const setEditingHabit = (habitIndex) => {
@@ -160,6 +163,8 @@ const MyWidget = () => {
 
     setLevel(newLevel);
     setHp(100); 
+    localStorage.setItem("hp", 100);
+    localStorage.setItem("level", newLevel)
   }
   
 
@@ -178,6 +183,7 @@ const MyWidget = () => {
     } 
 
     setXp(newXp);
+    localStorage.setItem("xp", newXp);
   }
 
   const changeHp = (hpChange) => {
@@ -190,6 +196,7 @@ const MyWidget = () => {
     }
 
     setHp(newHp)
+    localStorage.setItem("hp", newHp)
   }
 
   //Date & local storage handling
@@ -197,7 +204,6 @@ const MyWidget = () => {
   const increaseDate = () => {
     let newDate = new Date(displayDate)
     newDate.setDate(newDate.getDate() + 1)
-
     updateHabitsUponDateChange()
 
     setDisplayDate(newDate)
@@ -220,6 +226,8 @@ const MyWidget = () => {
       changeHp(-10)
 
     setHabits(newHabits)
+
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   useEffect(() => {
@@ -368,19 +376,8 @@ const ProgressBar = (props) => {
   )
 }
 
-// const MyGradient = () => {
-//   return (
-//     <svg style={{ width:0, height:0, position:"absolute" }} aria-hidden="true" focusable="false">
-//         <linearGradient id="champion-gradient" x2="1" y2="1">
-//           <stop offset="0%" stop-color="rgba(255,26,153,1)" />
-//           <stop offset="23%" stop-color="rgba(255,51,74,1)" />
-//           <stop offset="50%" stop-color="rgba(236,215,0,1)" />
-//           <stop offset="77%" stop-color="rgba(0,218,160,1)" />
-//           <stop offset="80%" stopColor="rgba(0,213,164,1)" />
-//           <stop offset="100%" stopColor="rgba(9,106,249,1)" />
-//         </linearGradient>
-//       </svg>
-//   )
-// }
-
 export default MyWidget;
+
+// Still to do:
+// FIx hp drop on reload bug (on page reload, you lose 10xp per unchecked habit as it thinks it's a new day.)
+// Save habits list and status on reload
