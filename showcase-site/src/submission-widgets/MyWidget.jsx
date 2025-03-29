@@ -116,6 +116,28 @@ const MyWidget = () => {
     setHabits(newHabits)
   }
 
+  const checkHabit = (habitIndex) => {
+    let newHabits = [...habits]
+    let isChecked = !newHabits[habitIndex].checked
+    newHabits[habitIndex].checked = isChecked ? true : null
+    
+    if(isChecked)
+      changeXp(10)
+    else
+      changeXp(-10)
+
+    setHabits(newHabits)
+  }
+
+  const setEditingHabit = (habitIndex) => {
+    if (editingHabitIndex === habitIndex) {
+      setEditingHabitIndex(null)
+    }
+    else {
+      setEditingHabitIndex(habitIndex)
+    }
+  }
+
   // Level up, XP and HP handlers
 
   const levelUpOrDown = (levelUp) => {
@@ -160,6 +182,8 @@ const MyWidget = () => {
       habit.checked = false
 
     setDisplayDate(newDate)
+
+    console.log(newHabits)
     setHabits(newHabits)
   }
 
@@ -170,7 +194,7 @@ const MyWidget = () => {
         <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
         <div className="text-xl font-bold text-indigo-600 text-center">Daily Tasks
         </div>
-        <div className="bg-cyan-500 h-100 bg-clip-border p-3 rounded-xl">
+        <div className="bg-cyan-500 h-100 max-h-100 bg-clip-border p-3 rounded-xl">
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -208,7 +232,6 @@ const MyWidget = () => {
       <div className='flex items-center justify-center gap-2 p-2 mt-2 border-t-2 border-gray-300'>
           <p>Current Date: {displayDate.toISOString().slice(0, 10)}</p>
           <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' onClick={() => updateDate(1)}>+1 Day</button>
-          <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg hover:scale-115 transition-[scale]' onClick={() => updateDate(-1)}>-1 Day</button>
       </div>
     </div>
   );
@@ -230,7 +253,7 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
       <input type="checkbox"
         className='border-gray-400 hover:scale-140 hover:border-black transition-all'
         onClick={onCheckClicked}
-        defaultChecked={isChecked} />
+        checked={isChecked} />
 
 
       {/* Name/edit box */}
@@ -260,7 +283,8 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
                           transition-all hover:border-black hover:scale-125'
             onClick={onDeleteClicked}><TiTrash />
           </button>
-        </div>}
+        </div>
+        }
     </div>
   )
 }
