@@ -27,33 +27,34 @@ const levelInfo = [
   {"minxp": 2200, "name": "Guardian", "description": "The world relies on you to stand vigilant and strong. As a Guardian, you are the shield against the chaos that threatens all. Your dedication and courage are unmatched, and with each habit completed, you fortify not only yourself but the very world you seek to protect."},
   {"minxp": 2700, "name": "Champion", "description": "You have risen above, a true legend in the making. As a Champion, your skill and wisdom are unparalleled, and your influence stretches far and wide. You are a force for good, a hero whose actions inspire the world to rise to greatness alongside you."},
   {"minxp": 3250, "name": "Legend", "description": "You stand at the peak, the embodiment of a hero’s journey. As a Legend, your name will be remembered for ages to come, and your every action echoes through history. With unwavering resolve and an unbreakable spirit, you have achieved the ultimate mastery—now continue to inspire all those who follow in your footsteps."},
+  {"minxp": 4000}
 ]
 
 const LevelIcon = (props) => {
   const classes = "w-50 h-50 z-0"
   switch (props.level) {
     case 0:
-      return (<GiRustySword className={classes} />)
+      return (<GiRustySword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 1:
-      return (<GiRoundShield className={classes} />)
+      return (<GiRoundShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 2:
-      return (<GiHeartArmor className={classes} />)
+      return (<GiHeartArmor className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 3:
-      return (<GiPointySword className={classes} />)
+      return (<GiPointySword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 4:
-      return (<GiSwordBrandish className={classes} />)
+      return (<GiSwordBrandish className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 5:
-      return (<GiBroadsword className={classes} />)
+      return (<GiBroadsword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 6:
-      return (<GiAbdominalArmor className={classes} />)
+      return (<GiAbdominalArmor className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 7:
-      return (<GiHeartShield className={classes} />)
+      return (<GiHeartShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 8:
-      return (<GiEyeShield className={classes} />)
+      return (<GiEyeShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 9:
-      return (<GiWingedSword className={classes} />)
+      return (<GiWingedSword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 10:
-      return (<GiSwordAltar className={classes} />)
+      return (<GiSwordAltar className={classes} style={{ fill: "var(--color-cyan-500)" }} />)
   }
 }
 
@@ -77,7 +78,7 @@ const xpcolors = [
   "#fff840",
   "#8cfcb2",
   "#40fffe",
-  "center / 130px url(https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/158/posts/37453/image-upload/RainbowGradientOverlay13.jpg)",
+  "linear-gradient(77deg, rgba(255,26,153,1) 0%, rgba(255,51,74,1) 23%, rgba(236,215,0,1) 50%, rgba(0,218,160,1) 77%, rgba(0,213,164,1) 80%, rgba(9,106,249,1) 100%)",
 ]
 
 const MyWidget = () => {
@@ -196,8 +197,7 @@ const MyWidget = () => {
       <button className="bg-red-100" onClick={changeHp}>Change hp</button>
       <button className="bg-red-100" onClick={() => changeXp(10)}>Change xp</button>
       <button className="bg-red-100" onClick={() => levelUpOrDown(true)}>Increase level</button>
-      <p>Level: {levels[level]}</p>
-      < LevelIcon level={level}/>*/}
+      */}
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600 text-center">{levelInfo[level].name}</div>
         <div className="w-50 h-50 m-5">
@@ -207,6 +207,7 @@ const MyWidget = () => {
           <div className="text-xs text-center">{levelInfo[level].description}</div>
         </div>
       </div>
+      
     </div>
   );
 };
@@ -273,20 +274,10 @@ const ProgressBar = (props) => {
     }
   }
 
-  // const updateProgress = () => {
-  //   // Modify if needed
-  //   if (progress == 100) {
-  //     setProgress(0);
-  //   } else if (progress >= 90) {
-  //     setProgress(100);
-  //   } else {
-  //     setProgress(progress+10);
-  //   }
-  // }
-
   return (
-    <div className="block mt-4 mb-4 w-full">
-      {props.type == "hp" ? <TiHeartFullOutline /> : <TiStarFullOutline />}
+    <div className="block w-full">
+      {props.type == "hp" ? <TiHeartFullOutline className='inline mr-2' /> : <TiStarFullOutline className='inline mr-2'/>}
+      <p className="text-xs inline">{props.type == "hp" ? `Remaining HP: ${props.progress}` : `Level ${props.level}`}</p>
       <div className="bg-gray-200 rounded-full h-4 w-100%">
         <div
           className="rounded-full h-full transition-all duration-500"
@@ -299,5 +290,20 @@ const ProgressBar = (props) => {
     </div>
   )
 }
+
+// const MyGradient = () => {
+//   return (
+//     <svg style={{ width:0, height:0, position:"absolute" }} aria-hidden="true" focusable="false">
+//         <linearGradient id="champion-gradient" x2="1" y2="1">
+//           <stop offset="0%" stop-color="rgba(255,26,153,1)" />
+//           <stop offset="23%" stop-color="rgba(255,51,74,1)" />
+//           <stop offset="50%" stop-color="rgba(236,215,0,1)" />
+//           <stop offset="77%" stop-color="rgba(0,218,160,1)" />
+//           <stop offset="80%" stopColor="rgba(0,213,164,1)" />
+//           <stop offset="100%" stopColor="rgba(9,106,249,1)" />
+//         </linearGradient>
+//       </svg>
+//   )
+// }
 
 export default MyWidget;
