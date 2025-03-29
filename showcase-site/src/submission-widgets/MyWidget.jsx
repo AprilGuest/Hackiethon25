@@ -88,7 +88,6 @@ const MyWidget = () => {
   const lastUpdatedXP = useRef(true)
   const maxLevel = 10
 
-  const [userName, setUserName] = useState("Name")
   const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [{ name: "Test Habit", checked: false },])
 
   const [displayDate, setDisplayDate] = useState(new Date())
@@ -248,7 +247,7 @@ const MyWidget = () => {
     <div className="p-6 max-w-4xl w-150 mx-auto h-160 bg-white rounded-xl shadow-lg flex flex-col">
       <div className="flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col mr-4">
-        <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
+        <h2 className="text-3xl font-bold text-gray-800 text-center">Hello, {levelInfo[level].name}!</h2>
         <div className="text-xl font-bold text-indigo-600 text-center">Daily Tasks
         </div>
         <div className="bg-cyan-500 h-100 w-60 max-h-100 bg-clip-border box-border p-3 rounded-xl overflow-auto
@@ -283,8 +282,8 @@ const MyWidget = () => {
       <button className="bg-red-100" onClick={() => changeXp(10)}>Change xp</button>
       <button className="bg-red-100" onClick={() => levelUpOrDown(true)}>Increase level</button>
       */}
-      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <div className="text-xl font-bold text-indigo-600 text-center">{levelInfo[level].name}</div>
+      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col justify-between">
+        <div className="text-xl font-bold text-indigo-600 text-center">Level {level} {levelInfo[level].name}</div>
         <div className="w-50 h-50 m-5">
           <LevelIcon level={level}/>
         </div>
