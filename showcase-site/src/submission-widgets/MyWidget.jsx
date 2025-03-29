@@ -90,13 +90,16 @@ const MyWidget = () => {
   const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [])
   const habitsIncreasedXP = useRef(habits.map((habit) => null))
 
-  console.log(habitsIncreasedXP)
-
-  const [displayDate, setDisplayDate] = useState(new Date())
-
   //Tracks the index of habit that is currently being edited (null if none are being edited)
   const [editingHabitIndex, setEditingHabitIndex] = useState(null)
   const inputtingInitialName = useRef(false)
+
+  //This originally did something more until I found out it was redunant
+  const getCurrentDate = () => {
+    return new Date()
+  }
+
+  const [displayDate, setDisplayDate] = useState(getCurrentDate())
 
   const addHabit = (newHabitName) => {
     inputtingInitialName.current = true
@@ -182,7 +185,6 @@ const MyWidget = () => {
     localStorage.setItem("hp", 100);
     localStorage.setItem("level", newLevel)
   }
-  
 
   const changeXp = (xpChange) => {
     let newXp = xp + xpChange
@@ -254,11 +256,12 @@ const MyWidget = () => {
 
   useEffect(() => {
     let storedDateData = localStorage.getItem("date")
+    let currentDate = getCurrentDate().getDate()
+
     if (storedDateData === null)
-      localStorage.setItem("date", new Date().getDate())
+      localStorage.setItem("date", currentDate)
     else {
-      if (storedDateData != new Date().getDate()) {
-        let currentDate = new Date().getDate()
+      if (storedDateData != currentDate) {
         localStorage.setItem("date", currentDate)
         updateHabitsUponDateChange()
       }
@@ -322,7 +325,7 @@ const MyWidget = () => {
       </div>
       <div className="flex flex-col gap-1 justify-center">
       <div className='flex items-center justify-center gap-2 p-2 mt-2 border-t-2 border-gray-300'>
-          <p>Current Date: {displayDate.toISOString().slice(0, 10)}</p>
+          <p>Current Date: {displayDate.toDateString()}</p>
           <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' 
           onClick={() => increaseDate()}>+1 Day</button>
       </div>
