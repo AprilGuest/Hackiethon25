@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TiPencil, TiTrash } from "react-icons/ti";
 
 const MyWidget = () => {
+  const [userName, setUserName] = useState("Name")
   const [habits, setHabits] = useState([{name: "Test Habit", checked:false}])
 
   //Tracks the index of habit that is currently being edited (null if none are being edited)
