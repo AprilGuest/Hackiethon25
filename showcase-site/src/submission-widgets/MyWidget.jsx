@@ -30,7 +30,7 @@ const levels = [
 ]
 
 const LevelIcon = (props) => {
-  const classes = "scale-5000 h-100 z-0"
+  const classes = "w-40 h-40 z-0"
   switch (props.level) {
     case 0:
     return (<GiRustySword className={classes} />)
@@ -177,7 +177,8 @@ const MyWidget = () => {
       </div>
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600">User Profile</div>
-        <div className="border-4 bg-blue-500 w-40 h-40 bg-clip-border p-3">Emoji Here</div>
+        <div className="w-40 h-40 m-5">
+        <LevelIcon level={level}/></div>
         <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">Level Description</div>
       </div>
       <ProgressBar type="hp" />
