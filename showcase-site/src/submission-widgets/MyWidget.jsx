@@ -75,31 +75,6 @@ const MyWidget = () => {
     }
   }
 
-  const levelUp = () => {
-    if (level < 10) {
-      setLevel(level+1);
-    } else {
-      setLevel(0);
-    }
-  }
-
-  const changeHp = () => {
-    if (hp >= 10) {
-      setHp(hp - 10);
-    } else {
-      setHp(100);
-    }
-  }
-
-  const changeXp = () => {
-    if (xp <= 90) {
-      setXp(xp + 10);
-    } else {
-      setXp(0);
-      levelUp();
-    }
-  }
-
     return (
     <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
