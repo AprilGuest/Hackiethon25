@@ -281,6 +281,7 @@ const MyWidget = () => {
         [&::-webkit-scrollbar-track]:bg-cyan-600
           [&::-webkit-scrollbar-thumb]:rounded-full
         [&::-webkit-scrollbar-thumb]:bg-cyan-700">
+          <div className='w-52'>
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -293,6 +294,7 @@ const MyWidget = () => {
               onEditName={(newName) => editHabitName(index, newName)}
               initialNaming={inputtingInitialName.current}/>
           ))}
+          </div>
           <div className="flex justify-start gap-2 items-center">
             <button className="mt-1 bg-cyan-500 border-2 border-cyan-400 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
             {habits.length === 0 && <p className="italic text-xs text-gray-800">Click to add a new habit!</p>}
@@ -329,7 +331,7 @@ const MyWidget = () => {
           <button className='bg-cyan-500 border-2 border-cyan-300 p-2 rounded-lg shadow-2xl hover:scale-115 transition-[scale]' 
           onClick={() => increaseDate()}>+1 Day</button>
       </div>
-      <p className="text-gray-400 text-sm italic">(This is here to showcase functionality and wouldn't appear in real use-cases)</p>
+      <p className="text-gray-400 text-[13px] italic">(This button exists to showcase functionality and wouldn't appear in real use-cases)</p>
       </div>
     </div>
   );
@@ -358,7 +360,7 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
       {!beingEdited ?
         <p className='overflow-hidden max-w-28'>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
-          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-33' maxLength={15} />
+          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-31' maxLength={15} />
           <button type="submit" className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
