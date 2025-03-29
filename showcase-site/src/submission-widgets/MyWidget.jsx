@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
+import { TiPencil, TiTrash } from "react-icons/ti";
 
 const MyWidget = () => {
   const [level, setLevel] = useState(0)
   const [hp, setHp] = useState(100)
   const [xp, setXp] = useState(0)
-  const [habits, setHabits] = useState(["Test Habit"])
 
-  //Tracks the habit that is currently being edited (null if none are being edited)
-  const [editingHabit, setEditingHabit] = useState(null)
+  const [userName, setUserName] = useState("Name")
+  const [habits, setHabits] = useState([{name: "Test Habit", checked:false}])
 
-  const addHabit = (newHabitName) => setHabits([...habits, newHabitName])
+  //Tracks the index of habit that is currently being edited (null if none are being edited)
+  const [editingHabitIndex, setEditingHabitIndex] = useState(null)
+
+  const addHabit = (newHabitName) => setHabits([...habits, {name: newHabitName, checked:false}])
 
   const editHabit = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
-    newHabits[habitIndex] = newHabitName
+    newHabits[habitIndex] = {name: newHabitName, checked: habits[habitIndex].checked}
     setHabits(newHabits)
   }
 
@@ -57,20 +60,25 @@ const MyWidget = () => {
     }
   }
 
-  return (
-    <div className="p-6 max-w-sm mx-auto bg-white rounded-xl shadow-lg">
-      <div className="text-center space-y-4">
-        <h2 className="text-xl font-bold text-gray-800">Our habit tracker</h2>
+  const checkHabit = (habitIndex) => {
+    let newHabits = [...habits]
+    newHabits[habitIndex].checked = !newHabits[habitIndex].checked
+    setHabits(newHabits)
+  }
 
-        <div className="text-2xl font-bold text-blue-600">
+    return (
+    <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg flex justify-between items-start">
+      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
+        <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
+        <div className="text-xl font-bold text-blue-600">
+          Daily Tasks
         </div>
-
-        <div className="justify-center bg-white">
-          <div>
-          <ul>
-            {habits.map((habit, index) => <li key={index}>{habit}</li>)}
-          </ul>
-          </div>
+        <div className="border-4 bg-green-500 w-40 h-100 bg-clip-border p-3">To-do List
+        </div>
+        <div className="bg-white rounded-xl shadow-md h-40 flex flex-col justify-end">
+          <div className="text-xl font-bold text-indigo-600">Current Status</div>
+          <div className="border-4 bg-blue-500 w-40 h-10 bg-clip-border p-3">HP Bar</div>
+          <div className="border-4 bg-cyan-500 w-40 h-10 bg-clip-border p-3">XP Bar</div>
         </div>
       </div>
       <ProgressBar type="hp" level={level} progress={hp} />
@@ -82,6 +90,29 @@ const MyWidget = () => {
     </div>
   );
 };
+
+const Habit = ({habitName, beingEdited, checked, onEditClicked, onDeleteClicked, onCheckClicked}) => {
+  return (
+    <div className="flex justify-between gap-5">
+      <input type="checkbox" className='border-gray-400 hover:scale-140 hover:border-black transition-all'
+      onClick={onCheckClicked}/>
+      
+      {/* Name/edit box */}
+      {!beingEdited ? 
+      <p>{habitName}</p> : 
+      <input type="text" className='border-1 rounded-md'></input>
+      }
+
+      { /* Edit & Delete Icons */ }
+
+      <button className='border-white border-1 rounded-md hover:border-black hover:scale-125 ml-auto box-border
+                        transition-all'
+                        onClick={onEditClicked}><TiPencil /></button>
+      <button><TiTrash className='border-white border-1 rounded-md scale-120 hover:border-black hover:scale-160 ml-auto box-border
+                        transition-all'/></button>
+       </div>
+   )
+}
 
 const ProgressBar = (props) => {
   const hpcolors = {
