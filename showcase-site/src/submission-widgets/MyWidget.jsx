@@ -16,17 +16,17 @@ import { GiBroadsword } from "react-icons/gi";
 import { GiSwordAltar } from "react-icons/gi";
 
 const levelInfo = [
-  {"name": "Novice", "description": "Welcome, fledgling hero! As a Novice, your journey has just begun, and every small step you take builds the foundation for greatness. Embrace the challenges ahead, for they are the first steps toward becoming a legendary figure in your world."},
-  {"name": "Initiate", "description": "The path of the hero grows clearer. As an Initiate, you’ve proven your commitment, and now it’s time to hone your skills and craft. Push forward with courage, for each habit completed strengthens your resolve and prepares you for the trials yet to come."},
-  {"name": "Recruit", "description": "You’ve joined the ranks of those who seek glory! As a Recruit, your courage and discipline are beginning to show. Embrace your role in the larger quest, and know that with each challenge overcome, your strength and influence grow ever greater."},
-  {"name": "Squire", "description": "The mantle of responsibility calls to you. As a Squire, you train alongside masters, learning the ways of warriors past. Your dedication to improving yourself not only builds your character but prepares you for the greatness that lies ahead."},
-  {"name": "Adventurer", "description": "The world opens before you, filled with endless possibilities. As an Adventurer, you have proven your willingness to explore the unknown and face the challenges of life head-on. Keep moving forward, for the world is full of treasures waiting for those brave enough to seek them."},
-  {"name": "Knight", "description": "A true hero stands tall in the face of adversity. As a Knight, your training and experience are unmatched, and your presence commands respect. With unwavering determination, you will continue to grow stronger, protecting those who need it most as you forge your path."},
-  {"name": "Warrior", "description": "No challenge is too great for a Warrior of your caliber. As a seasoned fighter, your skills are honed and your heart steeled. Each habit completed is another battle won, another step toward mastery that shapes you into an unstoppable force."},
-  {"name": "Protector", "description": "You are a guardian of peace and justice, a beacon of strength. As a Protector, you stand resolute, defending not just yourself but others as well. Your actions now carry the weight of responsibility, and with each victory, you inspire others to rise alongside you."},
-  {"name": "Guardian", "description": "The world relies on you to stand vigilant and strong. As a Guardian, you are the shield against the chaos that threatens all. Your dedication and courage are unmatched, and with each habit completed, you fortify not only yourself but the very world you seek to protect."},
-  {"name": "Champion", "description": "You have risen above, a true legend in the making. As a Champion, your skill and wisdom are unparalleled, and your influence stretches far and wide. You are a force for good, a hero whose actions inspire the world to rise to greatness alongside you."},
-  {"name": "Legend", "description": "You stand at the peak, the embodiment of a hero’s journey. As a Legend, your name will be remembered for ages to come, and your every action echoes through history. With unwavering resolve and an unbreakable spirit, you have achieved the ultimate mastery—now continue to inspire all those who follow in your footsteps."},
+  {"minxp": 0, "name": "Novice", "description": "Welcome, fledgling hero! As a Novice, your journey has just begun, and every small step you take builds the foundation for greatness. Embrace the challenges ahead, for they are the first steps toward becoming a legendary figure in your world."},
+  {"minxp": 100, "name": "Initiate", "description": "The path of the hero grows clearer. As an Initiate, you’ve proven your commitment, and now it’s time to hone your skills and craft. Push forward with courage, for each habit completed strengthens your resolve and prepares you for the trials yet to come."},
+  {"minxp": 250, "name": "Recruit", "description": "You’ve joined the ranks of those who seek glory! As a Recruit, your courage and discipline are beginning to show. Embrace your role in the larger quest, and know that with each challenge overcome, your strength and influence grow ever greater."},
+  {"minxp": 450, "name": "Squire", "description": "The mantle of responsibility calls to you. As a Squire, you train alongside masters, learning the ways of warriors past. Your dedication to improving yourself not only builds your character but prepares you for the greatness that lies ahead."},
+  {"minxp": 700, "name": "Adventurer", "description": "The world opens before you, filled with endless possibilities. As an Adventurer, you have proven your willingness to explore the unknown and face the challenges of life head-on. Keep moving forward, for the world is full of treasures waiting for those brave enough to seek them."},
+  {"minxp": 1000, "name": "Knight", "description": "A true hero stands tall in the face of adversity. As a Knight, your training and experience are unmatched, and your presence commands respect. With unwavering determination, you will continue to grow stronger, protecting those who need it most as you forge your path."},
+  {"minxp": 1350, "name": "Warrior", "description": "No challenge is too great for a Warrior of your caliber. As a seasoned fighter, your skills are honed and your heart steeled. Each habit completed is another battle won, another step toward mastery that shapes you into an unstoppable force."},
+  {"minxp": 1750, "name": "Protector", "description": "You are a guardian of peace and justice, a beacon of strength. As a Protector, you stand resolute, defending not just yourself but others as well. Your actions now carry the weight of responsibility, and with each victory, you inspire others to rise alongside you."},
+  {"minxp": 2200, "name": "Guardian", "description": "The world relies on you to stand vigilant and strong. As a Guardian, you are the shield against the chaos that threatens all. Your dedication and courage are unmatched, and with each habit completed, you fortify not only yourself but the very world you seek to protect."},
+  {"minxp": 2700, "name": "Champion", "description": "You have risen above, a true legend in the making. As a Champion, your skill and wisdom are unparalleled, and your influence stretches far and wide. You are a force for good, a hero whose actions inspire the world to rise to greatness alongside you."},
+  {"minxp": 3250, "name": "Legend", "description": "You stand at the peak, the embodiment of a hero’s journey. As a Legend, your name will be remembered for ages to come, and your every action echoes through history. With unwavering resolve and an unbreakable spirit, you have achieved the ultimate mastery—now continue to inspire all those who follow in your footsteps."},
 ]
 
 const LevelIcon = (props) => {
@@ -84,7 +84,6 @@ const MyWidget = () => {
   const [level, setLevel] = useState(0)
   const [hp, setHp] = useState(100)
   const [xp, setXp] = useState(0)
-  const xpToLevel = useRef(100)
   const maxLevel = 10
 
   const [userName, setUserName] = useState("Name")
@@ -117,28 +116,29 @@ const MyWidget = () => {
   const levelUpOrDown = (levelUp) => {
     let newLevel = level
 
-    if (levelUp && level < 10)
+    if (levelUp && level < maxLevel)
       newLevel = level + 1
-    else if(!levelUp && level > 1)
+    else if(!levelUp && level > 0)
       newLevel = level - 1
 
-    xpToLevel.current = 100 + (50 * (newLevel - 1))
     setLevel(newLevel);
-      setHp(100); 
-      //levelUpOrDown(false)
-    }
+    setHp(100); 
+  }
   
 
   const changeXp = (xpChange) => {
     let newXp = xp + xpChange
-
-
-    if(newXp >= xpToLevel.current) {
-      if (level < maxLevel)
-        levelUpOrDown(true);
-      else
-        newXp = xp
+    if (newXp < 0) {
+      newXp = 0;
     }
+
+    // If level up
+    if(newXp > levelInfo[level+1].minxp && level < maxLevel) {
+      levelUpOrDown(true);
+    // If level down
+    } else if (newXp < levelInfo[level].minxp) {
+      levelUpOrDown(false);
+    } 
 
     setXp(newXp);
   }
@@ -186,7 +186,7 @@ const MyWidget = () => {
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600 text-center">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
-            <ProgressBar type="xp" level={level} progress={(xp/xpToLevel.current) * 100} />
+            <ProgressBar type="xp" level={level} progress={((xp-levelInfo[level].minxp)/(levelInfo[level+1].minxp-levelInfo[level].minxp)) * 100} />
         </div>
       </div>
       {/* Debug Buttons 
