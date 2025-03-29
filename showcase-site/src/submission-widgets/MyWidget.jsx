@@ -32,22 +32,27 @@ const MyWidget = () => {
     setHabits(newHabits)
   }
 
-  return (
-    <div className="p-6 mx-auto bg-white rounded-xl w-100 shadow-lg">
-      <div className="text-center space-y-4">
-        <h2 className="text-xl font-bold text-gray-800">Habit Tracker</h2>
-
-        <div className="justify-center bg-white">
-          <div>
-          <ul>
-            {/* {habits.map((habit, index) => 
-            <Habit key={index} beingEdited={editingHabitIndex === index} habitName={habit.name} checked={habit.checked}
-            onCheckClicked={() => checkHabit(index)}
-            onEditClicked={() => setEditingHabitIndex({index})}/>)}*/ }
-          </ul>
-          </div>
+    return (
+    <div className="p-6 max-w-4xl mx-auto bg-white rounded-xl shadow-lg flex justify-between items-start">
+      <div className="bg-white rounded-xl shadow-md  h-[500px] flex flex-col">
+        <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
+        <div className="text-xl font-bold text-blue-600">
+          Daily Tasks
+        <div className="border-4 bg-green-500 w-40 h-70 bg-clip-border p-3">To-do List
+        </div>
+        <div className="bg-white rounded-xl shadow-md p-4 flex flex-col justify-end">
+          <div className="text-xl font-bold text-indigo-600">Current Status</div>
+          <div className="border-4 bg-blue-500 w-40 h-10 bg-clip-border p-3">HP Bar</div>
+          <div className="border-4 bg-cyan-500 w-40 h-10 bg-clip-border p-3">XP Bar</div>
         </div>
       </div>
+      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col justify-between ">
+        <div className="text-xl font-bold text-indigo-600">User Profile</div>
+        <div className="border-4 bg-blue-500 w-40 h-40 bg-clip-border p-3">Emoji Here</div>
+        <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">Level Description</div>
+      </div>
+      <ProgressBar type="hp" />
+      <ProgressBar type="xp" />
     </div>
   );
 };
@@ -71,7 +76,58 @@ const Habit = ({habitName, beingEdited, checked, onEditClicked, onDeleteClicked,
                         onClick={onEditClicked}><TiPencil /></button>
       <button><TiTrash className='border-white border-1 rounded-md scale-120 hover:border-black hover:scale-160 ml-auto box-border
                         transition-all'/></button>
-    </div>
+       </div>
+   )
+}
+
+const ProgressBar = (props) => {
+  // const colors = {
+  //   5: "darkred",
+  //   10: "firebrick",
+  //   20: "darkorange",
+  //   40: "orange",
+  //   60: "gold",
+  //   80: "olivedrab",
+  //   100: "limegreen",
+  // }
+  const [progress, setProgress] = useState(0);
+  const [color, setColor] = useState("limegreen");
+
+  const addProgress = () => {
+    if (progress >= 90) {
+      setProgress(100);
+    } else {
+      setProgress(progress+10);
+    }
+  }
+  const resetProgress = () => setProgress(0);
+
+
+  // if (props.type == 'hp') {
+  //   for (i in colors.keys) {
+  //     if (progress <= i) {
+  //       setColor(colors[i]);
+  //       alert(`Set color to ${color}.`)
+  //       break
+  //     }
+  //   }
+  // }
+
+  return (
+    <div>
+      <div className="size-100% bg-gray-200 rounded-full h-4 block mt-4 mb-4"> 
+        <div 
+          className="rounded-full h-full transition-all duration-500"
+          style={{
+                  width: `${progress}%`,
+                  background: color,
+                }}
+        ></div>
+      </div>
+      {/* Remove later */}
+      <button className="bg-red-100" onClick={addProgress}>Increase</button>
+      <button className="bg-red-100" onClick={resetProgress}>Reset</button>
+      </div>
   )
 }
 
