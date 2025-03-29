@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
-import { TiPencil, TiTrash, TiTick, TiTimes } from "react-icons/ti";
+import { TiPencil, TiTrash, TiTick, TiTimes, TiPlus } from "react-icons/ti";
 
 import { GiWingedSword } from "react-icons/gi";
 import { GiAbdominalArmor } from "react-icons/gi";
@@ -30,7 +30,7 @@ const levelInfo = [
 ]
 
 const LevelIcon = (props) => {
-  const classes = "w-40 h-40 z-0"
+  const classes = "w-50 h-50 z-0"
   switch (props.level) {
     case 0:
       return (<GiRustySword className={classes} />)
@@ -125,7 +125,7 @@ const MyWidget = () => {
     xpToLevel.current = 100 + (50 * (newLevel - 1))
     setLevel(newLevel);
       setHp(100); 
-      levelUpOrDown(false)
+      //levelUpOrDown(false)
     }
   
 
@@ -167,10 +167,10 @@ const MyWidget = () => {
   return (
     <div className="p-6 max-w-4xl w-150 mx-auto h-140 bg-white rounded-xl shadow-lg flex justify-between items-start">
       <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col mr-4">
-        <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
-        <div className="text-xl font-bold text-blue-600">Daily Tasks
+        <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
+        <div className="text-xl font-bold text-indigo-600 text-center">Daily Tasks
         </div>
-        <div className="bg-green-500/75 h-100 bg-clip-border p-3 rounded-xl">
+        <div className="bg-cyan-500 h-100 bg-clip-border p-3 rounded-xl">
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -179,10 +179,12 @@ const MyWidget = () => {
               onCheckClicked={() => checkHabit(index)}
               onEditName={(newName) => editHabitName(index, newName)} />
           ))}
+          {/* Needs styling */}
+          <button className="" onClick={() => addHabit("New habit")}><TiPlus /></button>
         </div>
         <div class="h-2"></div>
         <div className="bg-white rounded-xl h-40 flex flex-col justify-end">
-          <div className="text-xl font-bold text-indigo-600">Current Status</div>
+          <div className="text-xl font-bold text-indigo-600 text-center">Current Status</div>
             <ProgressBar type="hp" level={level} progress={hp} />
             <ProgressBar type="xp" level={level} progress={(xp/xpToLevel.current) * 100} />
         </div>
@@ -195,9 +197,10 @@ const MyWidget = () => {
       < LevelIcon level={level}/>*/}
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600 text-center">{levelInfo[level].name}</div>
-        <div className="w-40 h-40 m-5">
-        <LevelIcon level={level}/></div>
-        <div className="bg-cyan-500 w-full h-40 bg-clip-border p-3 rounded-xl">
+        <div className="w-50 h-50 m-5">
+          <LevelIcon level={level}/>
+        </div>
+        <div className="bg-cyan-500 w-full bg-clip-border p-3 rounded-xl">
           <div className="text-xs text-center">{levelInfo[level].description}</div>
         </div>
       </div>
@@ -229,10 +232,10 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
         <p>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
           <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={30} />
-          <button type="submit" className='border-green-500 border-1 rounded-md scale-100 box-border
+          <button type="submit" className='border-cyan-700 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
-          <button className='border-green-500 border-1 rounded-md scale-100 box-border
+          <button className='border-cyan-700 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'
             onClick={onEditClicked}><TiTimes />
           </button>
@@ -243,11 +246,11 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
 
       {!beingEdited &&
         <div className='ml-auto flex gap-2 justify-end'>
-          <button className='border-green-500 border-1 rounded-md ml-auto box-border transition-all
+          <button className='border-cyan-700 border-1 rounded-md ml-auto box-border transition-all
                       hover:border-black hover:scale-125'
             onClick={onEditClicked}><TiPencil />
           </button>
-          <button className='border-green-500 border-1 rounded-md scale-100 box-border
+          <button className='border-cyan-700 border-1 rounded-md scale-100 box-border
                           transition-all hover:border-black hover:scale-125'
             onClick={onDeleteClicked}><TiTrash />
           </button>
