@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
 import { TiPencil, TiTrash, TiTick, TiTimes } from "react-icons/ti";
@@ -84,6 +84,8 @@ const MyWidget = () => {
   const [level, setLevel] = useState(0)
   const [hp, setHp] = useState(100)
   const [xp, setXp] = useState(0)
+  const xpToLevel = useRef(100)
+  const maxLevel = 10
 
   const [userName, setUserName] = useState("Name")
   const [habits, setHabits] = useState([{ name: "Test Habit", checked: false },
@@ -112,36 +114,45 @@ const MyWidget = () => {
     setHabits(newHabits)
   }
 
-  const levelUp = () => {
-    if (level < 10) {
-      setLevel(level + 1);
-    } else {
-      setLevel(0); // Temporary
+  const levelUpOrDown = (levelUp) => {
+    let newLevel = level
+
+    if (levelUp && level < 10)
+      newLevel = level + 1
+    else if(!levelUp && level > 1)
+      newLevel = level - 1
+
+    xpToLevel.current = 100 + (50 * (newLevel - 1))
+    setLevel(newLevel);
+      setHp(100); 
+      levelUpOrDown(false)
     }
   }
 
-  // Temporary
-  const changeHp = () => {
-    if (hp >= 10) {
-      setHp(hp - 10);
-    } else {
-      setHp(100);
-    }
-  }
+  const changeXp = (xpChange) => {
+    let newXp = xp + xpChange
 
-  // Temporary
-  const changeXp = () => {
-    if (xp <= 90) {
-      setXp(xp + 10);
-    } else {
-      setXp(0);
-      levelUp();
+
+    if(newXp >= xpToLevel.current) {
+      if (level < maxLevel)
+        levelUpOrDown(true);
+      else
+        newXp = xp
     }
+
+    setXp(newXp);
   }
 
   const checkHabit = (habitIndex) => {
     let newHabits = [...habits]
-    newHabits[habitIndex].checked = !newHabits[habitIndex].checked
+    let isChecked = !newHabits[habitIndex].checked
+    newHabits[habitIndex].checked = isChecked ? true : null
+    
+    if(isChecked)
+      changeXp(10)
+    else
+      changeXp(-10)
+
     setHabits(newHabits)
   }
 
@@ -172,17 +183,22 @@ const MyWidget = () => {
         <div class="h-2"></div>
         <div className="bg-white rounded-xl shadow-md h-40 flex flex-col justify-end">
           <div className="text-xl font-bold text-indigo-600">Current Status</div>
-          <ProgressBar type="hp" />
-          <ProgressBar type="xp" />
+            <ProgressBar type="hp" level={level} progress={hp} />
+            <ProgressBar type="xp" level={level} progress={(xp/xpToLevel.current) * 100} />
         </div>
       </div>
+      {/* Debug Buttons 
+      <button className="bg-red-100" onClick={changeHp}>Change hp</button>
+      <button className="bg-red-100" onClick={() => changeXp(10)}>Change xp</button>
+      <button className="bg-red-100" onClick={() => levelUpOrDown(true)}>Increase level</button>
+      <p>Level: {levels[level]}</p>
+      < LevelIcon level={level}/>*/}
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600">User Profile</div>
         <div className="border-2 bg-blue-500/75 w-30 h-30 bg-clip-border p-3">Icon Here</div>
         <div class="h-8"></div>
         <div className="border-2 bg-cyan-500/75 w-60 h-60 bg-clip-border p-3">Level Description</div>
       </div>
-
     </div>
   );
 };
@@ -194,7 +210,7 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
     const formData = new FormData(e.target)
     const formJson = Object.fromEntries(formData.entries())
 
-    onEditName(formJson.newName)
+    onEditName(formJson.newName !== "" ? formJson.newName : habitName)
     onEditClicked()
   }
 
