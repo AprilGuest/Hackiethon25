@@ -251,7 +251,12 @@ const MyWidget = () => {
         <h2 className="text-3xl font-bold text-gray-800 text-center">Hello {userName}!</h2>
         <div className="text-xl font-bold text-indigo-600 text-center">Daily Tasks
         </div>
-        <div className="bg-cyan-500 h-100 max-h-100 bg-clip-border p-3 rounded-xl">
+        <div className="bg-cyan-500 h-100 w-60 max-h-100 bg-clip-border box-border p-3 rounded-xl overflow-auto
+          [&::-webkit-scrollbar]:w-2
+          [&::-webkit-scrollbar-track]:rounded-full
+        [&::-webkit-scrollbar-track]:bg-cyan-600
+          [&::-webkit-scrollbar-thumb]:rounded-full
+        [&::-webkit-scrollbar-thumb]:bg-cyan-700">
           {habits.map((habit, index) => (
             <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
               isChecked={habit.checked}
@@ -317,9 +322,9 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
 
       {/* Name/edit box */}
       {!beingEdited ?
-        <p>{habitName}</p> :
+        <p className='overflow-hidden max-w-28'>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
-          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={30} />
+          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={20} />
           <button type="submit" className='border-cyan-500 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
