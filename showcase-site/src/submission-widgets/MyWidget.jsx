@@ -35,6 +35,31 @@ const MyWidget = () => {
     setHabits(newHabits)
   }
 
+  const levelUp = () => {
+    if (level < 10) {
+      setLevel(level+1);
+    } else {
+      setLevel(0);
+    }
+  }
+
+  const changeHp = () => {
+    if (hp >= 10) {
+      setHp(hp - 10);
+    } else {
+      setHp(100);
+    }
+  }
+
+  const changeXp = () => {
+    if (xp <= 90) {
+      setXp(xp + 10);
+    } else {
+      setXp(0);
+      levelUp();
+    }
+  }
+
   const checkHabit = (habitIndex) => {
     let newHabits = [...habits]
     newHabits[habitIndex].checked = !newHabits[habitIndex].checked
