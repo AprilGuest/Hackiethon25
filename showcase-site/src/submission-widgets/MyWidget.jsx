@@ -178,7 +178,7 @@ const MyWidget = () => {
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600">User Profile</div>
         <div className="w-40 h-40 m-5">
-        <LevelIcon level={level} style={}/></div>
+        <LevelIcon level={level}/></div>
         <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">
           <div className="font-bold text-indigo-600 text-l text-center">{levelInfo[level].name}</div>
           <div className="text-xs text-center">{levelInfo[level].description}</div>
