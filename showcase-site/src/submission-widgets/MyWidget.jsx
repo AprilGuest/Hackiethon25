@@ -25,9 +25,6 @@ const MyWidget = () => {
         <div className="border-4 bg-blue-500 w-40 h-40 bg-clip-border p-3">Emoji Here</div>
         <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">Level Description</div>
       </div>
-
-
-
     </div>
   );
 };
