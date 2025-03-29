@@ -15,18 +15,18 @@ import { GiSwordBrandish } from "react-icons/gi";
 import { GiBroadsword } from "react-icons/gi";
 import { GiSwordAltar } from "react-icons/gi";
 
-const levels = [
-  "Novice",
-  "Initiate",
-  "Recruit",
-  "Squire",
-  "Adventurer",
-  "Knight",
-  "Warrior",
-  "Protector",
-  "Guardian",
-  "Champion",
-  "Legend",
+const levelInfo = [
+  {"name": "Novice", "description": "Welcome, fledgling hero! As a Novice, your journey has just begun, and every small step you take builds the foundation for greatness. Embrace the challenges ahead, for they are the first steps toward becoming a legendary figure in your world."},
+  {"name": "Initiate", "description": "The path of the hero grows clearer. As an Initiate, you’ve proven your commitment, and now it’s time to hone your skills and craft. Push forward with courage, for each habit completed strengthens your resolve and prepares you for the trials yet to come."},
+  {"name": "Recruit", "description": "You’ve joined the ranks of those who seek glory! As a Recruit, your courage and discipline are beginning to show. Embrace your role in the larger quest, and know that with each challenge overcome, your strength and influence grow ever greater."},
+  {"name": "Squire", "description": "The mantle of responsibility calls to you. As a Squire, you train alongside masters, learning the ways of warriors past. Your dedication to improving yourself not only builds your character but prepares you for the greatness that lies ahead."},
+  {"name": "Adventurer", "description": "The world opens before you, filled with endless possibilities. As an Adventurer, you have proven your willingness to explore the unknown and face the challenges of life head-on. Keep moving forward, for the world is full of treasures waiting for those brave enough to seek them."},
+  {"name": "Knight", "description": "A true hero stands tall in the face of adversity. As a Knight, your training and experience are unmatched, and your presence commands respect. With unwavering determination, you will continue to grow stronger, protecting those who need it most as you forge your path."},
+  {"name": "Warrior", "description": "No challenge is too great for a Warrior of your caliber. As a seasoned fighter, your skills are honed and your heart steeled. Each habit completed is another battle won, another step toward mastery that shapes you into an unstoppable force."},
+  {"name": "Protector", "description": "You are a guardian of peace and justice, a beacon of strength. As a Protector, you stand resolute, defending not just yourself but others as well. Your actions now carry the weight of responsibility, and with each victory, you inspire others to rise alongside you."},
+  {"name": "Guardian", "description": "The world relies on you to stand vigilant and strong. As a Guardian, you are the shield against the chaos that threatens all. Your dedication and courage are unmatched, and with each habit completed, you fortify not only yourself but the very world you seek to protect."},
+  {"name": "Champion", "description": "You have risen above, a true legend in the making. As a Champion, your skill and wisdom are unparalleled, and your influence stretches far and wide. You are a force for good, a hero whose actions inspire the world to rise to greatness alongside you."},
+  {"name": "Legend", "description": "You stand at the peak, the embodiment of a hero’s journey. As a Legend, your name will be remembered for ages to come, and your every action echoes through history. With unwavering resolve and an unbreakable spirit, you have achieved the ultimate mastery—now continue to inspire all those who follow in your footsteps."},
 ]
 
 const LevelIcon = (props) => {
@@ -178,8 +178,11 @@ const MyWidget = () => {
       <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
         <div className="text-xl font-bold text-indigo-600">User Profile</div>
         <div className="w-40 h-40 m-5">
-        <LevelIcon level={level}/></div>
-        <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">Level Description</div>
+        <LevelIcon level={level} style={}/></div>
+        <div className="border-4 bg-cyan-500 w-50 h-40 bg-clip-border p-3">
+          <div className="font-bold text-indigo-600 text-l text-center">{levelInfo[level].name}</div>
+          <div className="text-xs text-center">{levelInfo[level].description}</div>
+        </div>
       </div>
       <ProgressBar type="hp" />
       <ProgressBar type="xp" />
