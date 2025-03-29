@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
+import { TiPencil, TiTrash } from "react-icons/ti";
 
 const MyWidget = () => {
+  const [habits, setHabits] = useState([{name: "Test Habit", checked:false}])
 
-  const [habits, setHabits] = useState(["Test Habit"])
+  //Tracks the index of habit that is currently being edited (null if none are being edited)
+  const [editingHabitIndex, setEditingHabitIndex] = useState(null)
 
-  //Tracks the habit that is currently being edited (null if none are being edited)
-  const [editingHabit, setEditingHabit] = useState(null)
-
-  const addHabit = (newHabitName) => setHabits([...habits, newHabitName])
+  const addHabit = (newHabitName) => setHabits([...habits, {name: newHabitName, checked:false}])
 
   const editHabit = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
-    newHabits[habitIndex] = newHabitName
+    newHabits[habitIndex] = {name: newHabitName, checked: habits[habitIndex].checked}
     setHabits(newHabits)
   }
 
@@ -23,6 +23,12 @@ const MyWidget = () => {
     }
 
 
+    setHabits(newHabits)
+  }
+
+  const checkHabit = (habitIndex) => {
+    let newHabits = [...habits]
+    newHabits[habitIndex].checked = !newHabits[habitIndex].checked
     setHabits(newHabits)
   }
 
@@ -50,6 +56,29 @@ const MyWidget = () => {
     </div>
   );
 };
+
+const Habit = ({habitName, beingEdited, checked, onEditClicked, onDeleteClicked, onCheckClicked}) => {
+  return (
+    <div className="flex justify-between gap-5">
+      <input type="checkbox" className='border-gray-400 hover:scale-140 hover:border-black transition-all'
+      onClick={onCheckClicked}/>
+      
+      {/* Name/edit box */}
+      {!beingEdited ? 
+      <p>{habitName}</p> : 
+      <input type="text" className='border-1 rounded-md'></input>
+      }
+
+      { /* Edit & Delete Icons */ }
+
+      <button className='border-white border-1 rounded-md hover:border-black hover:scale-125 ml-auto box-border
+                        transition-all'
+                        onClick={onEditClicked}><TiPencil /></button>
+      <button><TiTrash className='border-white border-1 rounded-md scale-120 hover:border-black hover:scale-160 ml-auto box-border
+                        transition-all'/></button>
+       </div>
+   )
+}
 
 const ProgressBar = (props) => {
   // const colors = {
@@ -98,7 +127,7 @@ const ProgressBar = (props) => {
       {/* Remove later */}
       <button className="bg-red-100" onClick={addProgress}>Increase</button>
       <button className="bg-red-100" onClick={resetProgress}>Reset</button>
-    </div>
+      </div>
   )
 }
 
