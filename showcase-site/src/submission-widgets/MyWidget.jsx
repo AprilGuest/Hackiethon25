@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { TiHeartFullOutline } from "react-icons/ti";
 import { TiStarFullOutline } from "react-icons/ti";
-import { TiPencil, TiTrash, TiTick, TiTimes } from "react-icons/ti";
+import { TiPencil, TiTrash, TiTick, TiTimes, TiPlus } from "react-icons/ti";
 
 import { GiWingedSword } from "react-icons/gi";
 import { GiAbdominalArmor } from "react-icons/gi";
@@ -15,20 +15,6 @@ import { GiSwordBrandish } from "react-icons/gi";
 import { GiBroadsword } from "react-icons/gi";
 import { GiSwordAltar } from "react-icons/gi";
 
-<<<<<<< Updated upstream
-const levels = [
-  "Novice",
-  "Initiate",
-  "Recruit",
-  "Squire",
-  "Adventurer",
-  "Knight",
-  "Warrior",
-  "Protector",
-  "Guardian",
-  "Champion",
-  "Legend",
-=======
 const levelInfo = [
   { "minxp": 0, "name": "Novice", "description": "Welcome, fledgling hero! As a Novice, your journey has just begun, and every small step you take builds the foundation for greatness. Embrace the challenges ahead, for they are the first steps toward becoming a legendary figure in your world." },
   { "minxp": 100, "name": "Initiate", "description": "The path of the hero grows clearer. As an Initiate, you’ve proven your commitment, and now it’s time to hone your skills and craft. Push forward with courage, for each habit completed strengthens your resolve and prepares you for the trials yet to come." },
@@ -42,34 +28,33 @@ const levelInfo = [
   { "minxp": 2700, "name": "Champion", "description": "You have risen above, a true legend in the making. As a Champion, your skill and wisdom are unparalleled, and your influence stretches far and wide. You are a force for good, a hero whose actions inspire the world to rise to greatness alongside you." },
   { "minxp": 3250, "name": "Legend", "description": "You stand at the peak, the embodiment of a hero’s journey. As a Legend, your name will be remembered for ages to come, and your every action echoes through history. With unwavering resolve and an unbreakable spirit, you have achieved the ultimate mastery—now continue to inspire all those who follow in your footsteps." },
   { "minxp": 4000 }
->>>>>>> Stashed changes
 ]
 
 const LevelIcon = (props) => {
-  const classes = "scale-5000 h-100 z-0"
+  const classes = "w-50 h-50 z-0"
   switch (props.level) {
     case 0:
-      return (<GiRustySword className={classes} />)
+      return (<GiRustySword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 1:
-      return (<GiRoundShield className={classes} />)
+      return (<GiRoundShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 2:
-      return (<GiHeartArmor className={classes} />)
+      return (<GiHeartArmor className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 3:
-      return (<GiPointySword className={classes} />)
+      return (<GiPointySword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 4:
-      return (<GiSwordBrandish className={classes} />)
+      return (<GiSwordBrandish className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 5:
-      return (<GiBroadsword className={classes} />)
+      return (<GiBroadsword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 6:
-      return (<GiAbdominalArmor className={classes} />)
+      return (<GiAbdominalArmor className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 7:
-      return (<GiHeartShield className={classes} />)
+      return (<GiHeartShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 8:
-      return (<GiEyeShield className={classes} />)
+      return (<GiEyeShield className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 9:
-      return (<GiWingedSword className={classes} />)
+      return (<GiWingedSword className={classes} style={{ fill: xpcolors[props.level] }} />)
     case 10:
-      return (<GiSwordAltar className={classes} />)
+      return (<GiSwordAltar className={classes} style={{ fill: "var(--color-cyan-500)" }} />)
   }
 }
 
@@ -93,25 +78,22 @@ const xpcolors = [
   "#fff840",
   "#8cfcb2",
   "#40fffe",
-  "center / 130px url(https://cms-assets.tutsplus.com/cdn-cgi/image/width=850/uploads/users/158/posts/37453/image-upload/RainbowGradientOverlay13.jpg)",
+  "linear-gradient(77deg, rgba(255,26,153,1) 0%, rgba(255,51,74,1) 23%, rgba(236,215,0,1) 50%, rgba(0,218,160,1) 77%, rgba(0,213,164,1) 80%, rgba(9,106,249,1) 100%)",
 ]
 
 const MyWidget = () => {
-  const [level, setLevel] = useState(0)
-  const [hp, setHp] = useState(100)
-  const [xp, setXp] = useState(0)
+  const [level, setLevel] = useState(Number(localStorage.getItem("level")) || 0)
+  const [hp, setHp] = useState(Number(localStorage.getItem('hp')) || 100)
+  const [xp, setXp] = useState(Number(localStorage.getItem("xp")) || 0)
+  const maxLevel = 10
 
-  const [userName, setUserName] = useState("Name")
-  const [habits, setHabits] = useState([{ name: "Test Habit", checked: false },
-  { name: "Habit 2", checked: false }
-  ])
+  const [habits, setHabits] = useState(JSON.parse(localStorage.getItem("habits")) || [])
+  const habitsIncreasedXP = useRef(habits.map((habit) => null))
 
   //Tracks the index of habit that is currently being edited (null if none are being edited)
   const [editingHabitIndex, setEditingHabitIndex] = useState(null)
+  const inputtingInitialName = useRef(false)
 
-<<<<<<< Updated upstream
-  const addHabit = (newHabitName) => setHabits([...habits, { name: newHabitName, checked: false }])
-=======
   //This originally did something more until I found out it was redunant
   const getCurrentDate = () => {
     return new Date()
@@ -127,56 +109,34 @@ const MyWidget = () => {
     habitsIncreasedXP.current = ([...habitsIncreasedXP.current, null])
     localStorage.setItem("habits", JSON.stringify(habits))
   }
->>>>>>> Stashed changes
 
   const editHabitName = (habitIndex, newHabitName) => {
     let newHabits = [...habits]
+    inputtingInitialName.current = false
     newHabits[habitIndex] = { name: newHabitName, checked: habits[habitIndex].checked }
     setHabits(newHabits)
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const deleteHabit = (habitIndex) => {
+    inputtingInitialName.current = false
+
     let newHabits = []
+    let newHabitsIncreasedXP = []
     for (let i = 0; i < habits.length; i++) {
-      if (i !== habitIndex)
+      if (i !== habitIndex) {
         newHabits.push(habits[i])
+        newHabitsIncreasedXP.push(habitsIncreasedXP.current[i])
+      }
     }
 
-
+    habitsIncreasedXP.current = newHabitsIncreasedXP
     setHabits(newHabits)
+    localStorage.setItem("habits", JSON.stringify(newHabits))
   }
 
-  const levelUp = () => {
-    if (level < 10) {
-      setLevel(level + 1);
-    } else {
-      setLevel(0); // Temporary
-    }
-  }
-
-  // Temporary
-  const changeHp = () => {
-    if (hp >= 10) {
-      setHp(hp - 10);
-    } else {
-      setHp(100);
-    }
-  }
-
-  // Temporary
-  const changeXp = () => {
-    if (xp <= 90) {
-      setXp(xp + 10);
-    } else {
-      setXp(0);
-      levelUp();
-    }
-  }
   const checkHabit = (habitIndex) => {
     let newHabits = [...habits]
-<<<<<<< Updated upstream
-    newHabits[habitIndex].checked = !newHabits[habitIndex].checked
-=======
     let isChecked = !newHabits[habitIndex].checked
     newHabits[habitIndex].checked = isChecked ? true : null
 
@@ -196,49 +156,19 @@ const MyWidget = () => {
         changeHp(-10)
     }
 
->>>>>>> Stashed changes
     setHabits(newHabits)
+
+    localStorage.setItem("habits", JSON.stringify(habits))
   }
 
   const setEditingHabit = (habitIndex) => {
-    if (editingHabitIndex === habitIndex) {
+    if (editingHabitIndex === habitIndex && !inputtingInitialName.current) {
       setEditingHabitIndex(null)
     }
     else {
       setEditingHabitIndex(habitIndex)
     }
   }
-<<<<<<< Updated upstream
-  return (
-    <div className="p-6 max-w-4xl w-150 mx-auto h-140 bg-white rounded-xl shadow-lg flex justify-between items-start">
-      <div className="bg-white rounded-xl shadow-md p-4 w-75 h-125 flex flex-col">
-        <h2 className="text-3xl font-bold text-gray-800">Hello {userName}!</h2>
-        <div className="text-xl font-bold text-blue-600">Daily Tasks
-        </div>
-        <div className="border-2 bg-green-500/75 h-100 bg-clip-border p-3">Habits List
-          {habits.map((habit, index) => (
-            <Habit key={index} habitName={habit.name} beingEdited={index === editingHabitIndex}
-              isChecked={habit.checked}
-              onDeleteClicked={() => deleteHabit(index)}
-              onEditClicked={() => setEditingHabit(index)}
-              onCheckClicked={() => checkHabit(index)}
-              onEditName={(newName) => editHabitName(index, newName)} />
-          ))}
-        </div>
-        <div class="h-2"></div>
-        <div className="bg-white rounded-xl shadow-md h-40 flex flex-col justify-end">
-          <div className="text-xl font-bold text-indigo-600">Current Status</div>
-          <ProgressBar type="hp" />
-          <ProgressBar type="xp" />
-        </div>
-      </div>
-      <div className="bg-white rounded-xl shadow-md p-4 w-1/2 h-[500px] flex flex-col">
-        <div className="text-xl font-bold text-indigo-600">Level {level}: {levels[level]}</div>
-        <div className="border-2 bg-blue-500/75 w-30 h-30 bg-clip-border p-3">Icon Here</div>
-        <div class="h-8"></div>
-        <div className="text-xs border-2 bg-cyan-500/75 w-60 h-60 bg-clip-border p-3"> Level Description
-        </div>
-=======
 
   // Level up, XP and HP handlers
 
@@ -366,7 +296,7 @@ const MyWidget = () => {
               ))}
             </div>
             <div className="flex justify-start gap-2 items-center">
-              <button className="mt-1 bg-cyan-400 border-2 border-cyan-500 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
+              <button className="mt-1 bg-cyan-400 border-2 border-cyan-500 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale] flex flex-col justify-between" onClick={() => addHabit("New habit")}><TiPlus /></button>
               {habits.length === 0 && <p className="italic text-xs text-gray-800">Click to add a new habit!</p>}
             </div>
           </div>
@@ -402,57 +332,41 @@ const MyWidget = () => {
             onClick={() => increaseDate()}>+1 Day</button>
         </div>
         <p className="text-gray-400 text-[13px] italic">(This button exists to showcase functionality and wouldn't appear in real use-cases)</p>
->>>>>>> Stashed changes
       </div>
     </div>
   );
 };
 
-const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClicked, onCheckClicked, onEditName }) => {
+const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClicked, onCheckClicked, onEditName, initialNaming }) => {
   const handleNameChange = (e) => {
     e.preventDefault()
 
     const formData = new FormData(e.target)
     const formJson = Object.fromEntries(formData.entries())
 
-    onEditName(formJson.newName)
+    onEditName(formJson.newName !== "" ? formJson.newName : habitName)
     onEditClicked()
   }
 
   return (
     <div className="flex gap-5">
       <input type="checkbox"
-<<<<<<< Updated upstream
-        className='border-gray-400 hover:scale-140 hover:border-black transition-all'
-        onClick={onCheckClicked}
-        defaultChecked={isChecked} />
-
-=======
         className={`border-gray-400 hover:scale-140 hover:border transition-all ${(beingEdited && initialNaming) && "opacity-0"}`}
         onChange={!(beingEdited && initialNaming) ? onCheckClicked : (() => { })}
         checked={isChecked}
       />
->>>>>>> Stashed changes
 
       {/* Name/edit box */}
       {!beingEdited ?
-        <p>{habitName}</p> :
+        <p className='overflow-hidden max-w-28'>{habitName}</p> :
         <form className="flex gap-2" onSubmit={handleNameChange}>
-<<<<<<< Updated upstream
-          <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-30' maxLength={30} />
-          <button type="submit" className='border-green-500 border-1 rounded-md scale-100 box-border
-                        transition-all hover:border-black hover:scale-125'><TiTick />
-          </button>
-          <button className='border-green-500 border-1 rounded-md scale-100 box-border
-=======
           <input type="text" name="newName" placeholder={habitName} className='border-1 rounded-md w-31' maxLength={15} />
           <button type="submit" className='border-cyan-300 border-1 rounded-md scale-100 box-border
                         transition-all hover:border-black hover:scale-125'><TiTick />
           </button>
           <button className='border-cyan-300 border-1 rounded-md scale-100 box-border
->>>>>>> Stashed changes
                         transition-all hover:border-black hover:scale-125'
-            onClick={onEditClicked}><TiTimes />
+            onClick={initialNaming ? onDeleteClicked : onEditClicked}><TiTimes />
           </button>
         </form>
       }
@@ -461,17 +375,6 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
 
       {!beingEdited &&
         <div className='ml-auto flex gap-2 justify-end'>
-<<<<<<< Updated upstream
-          <button className='border-green-500 border-1 rounded-md ml-auto box-border transition-all
-                      hover:border-black hover:scale-125'
-            onClick={onEditClicked}><TiPencil />
-          </button>
-          <button className='border-green-500 border-1 rounded-md scale-100 box-border
-                          transition-all hover:border-black hover:scale-125'
-            onClick={onDeleteClicked}><TiTrash />
-          </button>
-        </div>}
-=======
           <button className='border-cyan-300 border-1 rounded-md ml-auto box-border transition-all
                       hover:border-black hover:scale-125'
             onClick={onEditClicked}><TiPencil />
@@ -482,7 +385,6 @@ const Habit = ({ habitName, beingEdited, isChecked, onEditClicked, onDeleteClick
           </button>
         </div>
       }
->>>>>>> Stashed changes
     </div>
   )
 }
@@ -498,26 +400,10 @@ const ProgressBar = (props) => {
     }
   }
 
-  // const updateProgress = () => {
-  //   // Modify if needed
-  //   if (progress == 100) {
-  //     setProgress(0);
-  //   } else if (progress >= 90) {
-  //     setProgress(100);
-  //   } else {
-  //     setProgress(progress+10);
-  //   }
-  // }
-
   return (
-<<<<<<< Updated upstream
-    <div className="block mt-4 mb-4 w-full">
-      {props.type == "hp" ? <TiHeartFullOutline /> : <TiStarFullOutline />}
-=======
     <div className="block w-full">
       {props.type == "hp" ? <TiHeartFullOutline className='inline mr-2' /> : <TiStarFullOutline className='inline mr-2' />}
       <p className="text-xs inline">{props.type == "hp" ? `Remaining HP: ${props.progress}` : `Level ${props.level} - ${props.currentXp}/${props.xpToLevel} XP`}</p>
->>>>>>> Stashed changes
       <div className="bg-gray-200 rounded-full h-4 w-100%">
         <div
           className="rounded-full h-full transition-all duration-500"
@@ -532,3 +418,6 @@ const ProgressBar = (props) => {
 }
 
 export default MyWidget;
+
+// Still to do:
+// BUG: free hp by completing habits up to 100hp then undoing them (to lose xp instead)
