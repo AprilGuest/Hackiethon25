@@ -295,7 +295,7 @@ const MyWidget = () => {
               initialNaming={inputtingInitialName.current}/>
           ))}
           </div>
-          <div className="flex justify-start gap-2 items-center">
+          <div className="flex flex-col justify-start gap-2 items-center">
             <button className="mt-1 bg-cyan-500 border-2 border-cyan-400 p-1 rounded-lg shadow-2xl hover:scale-115 transition-[scale]" onClick={() => addHabit("New habit")}><TiPlus /></button>
             {habits.length === 0 && <p className="italic text-xs text-gray-800">Click to add a new habit!</p>}
           </div>
